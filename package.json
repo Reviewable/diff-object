@@ -1,6 +1,6 @@
 {
   "name": "diff-objects",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "diff-objects.js",
   "repository": "git@github.com:Reviewable/diff-objects.git",
   "author": "Piotr Kaminski <piotr@reviewable.io>",
@@ -8,5 +8,11 @@
   "devDependencies": {
     "eslint": "^8.51.0",
     "eslint-plugin-lodash": "^7.4.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "peerDependencies": {
+    "angular": "1.x"
   }
 }
