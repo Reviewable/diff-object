@@ -35,33 +35,36 @@ if (typeof require !== 'undefined' && typeof _ === 'undefined') {
 })(() => {
   'use strict';
 
-  function stringify(that) {
+  function stringify(that, maxLength) {
     let output = '' + JSON.stringify(that);
-    if (output.length > 100) output = `${output.slice(0, 50)} […] ${output.slice(-50)}`;
+    if (output.length > maxLength) {
+      const halfLength = Math.ceil(maxLength / 2);
+      output = `${output.slice(0, halfLength)} […] ${output.slice(-halfLength)}`;
+    }
     return output;
   }
 
-  function diffProperty(o1, o2, key) {
-    if (key in o1 && key in o2) return diffObjects(o1[key], o2[key]);
-    return `${key in o1 ? stringify(o1[key]) : '∅'} → ${key in o2 ? stringify(o2[key]) : '∅'}`;
-  }
-
-  function diffObjects(o1, o2) {
+  function diffObjects(o1, o2, {maxDiffLength = 100} = {}) {
     if (o1 === o2) return null;
     if (_.isArray(o1) && _.isArray(o2)) {
-      const delta =
-        _.map(o1.length >= o2.length ? o1 : o2, (ignored, i) => diffObjects(o1[i], o2[i]));
+      const delta = _.map(
+        o1.length >= o2.length ? o1 : o2,
+        (ignored, i) => diffObjects(o1[i], o2[i], {maxDiffLength}));
       return _.some(delta) ? delta : null;
     }
     if (_.isObject(o1) && _.isObject(o2)) {
       const delta = _(o1)
         .keys().concat(_.keys(o2)).keyBy()
-        .mapValues(key => diffProperty(o1, o2, key))
+        .mapValues(key => {
+          if (key in o1 && key in o2) return diffObjects(o1[key], o2[key], {maxDiffLength});
+          return `${key in o1 ? stringify(o1[key], maxDiffLength) : '∅'} → ` +
+            `${key in o2 ? stringify(o2[key], maxDiffLength) : '∅'}`;
+        })
         .pickBy().value();
       return _.isEmpty(delta) ? null : delta;
     }
     if (_.isEqual(o1, o2)) return null;
-    return `${stringify(o1)} → ${stringify(o2)}`;
+    return `${stringify(o1, maxDiffLength)} → ${stringify(o2, maxDiffLength)}`;
   }
 
   return diffObjects;
