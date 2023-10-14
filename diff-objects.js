@@ -36,7 +36,7 @@ if (typeof require !== 'undefined' && typeof _ === 'undefined') {
   'use strict';
 
   function stringify(that) {
-    let output = JSON.stringify(that);
+    let output = '' + JSON.stringify(that);
     if (output.length > 100) output = `${output.slice(0, 50)} […] ${output.slice(-50)}`;
     return output;
   }

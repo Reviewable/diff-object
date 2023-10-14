@@ -1,6 +1,6 @@
 {
   "name": "diff-objects",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "diff-objects.js",
   "repository": "git@github.com:Reviewable/diff-objects.git",
   "author": "Piotr Kaminski <piotr@reviewable.io>",
