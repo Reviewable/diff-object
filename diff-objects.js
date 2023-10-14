@@ -16,19 +16,19 @@ if (typeof require !== 'undefined' && typeof _ === 'undefined') {
     self instanceof WorkerGlobalScope;
   const isNode = typeof process !== 'undefined' && process.versions && process.versions.node;
   /* eslint-enable no-undef */
-  const diffObject = init();
+  const diffObjects = init();
   if (typeof angular !== 'undefined') {
     /* global angular */
-    angular.module('diff-object', []).constant('diffObject', diffObject);
+    angular.module('diff-objects', []).constant('diffObjects', diffObjects);
   } else if (isNode) {
     /* global module */
-    module.exports = {diffObject};
+    module.exports = {diffObjects};
   } else if (isWebWorker) {
     /* global self */
-    self.diffObject = diffObject;
+    self.diffObject = diffObjects;
   } else if (isBrowser) {
     /* global window */
-    window.diffObject = diffObject;
+    window.diffObject = diffObjects;
   } else {
     throw new Error('Unable to install diffObject - no recognizable global object found');
   }
